@@ -3,119 +3,147 @@
 
 using namespace std;
 
-//Classe login + instancia objLogin
 class Login{
-    //Atributos
-    string userName , email , password;
-    string searchName , searchEmail , searchPassword;
-    fstream file; //instacia de um arquivo
-    //Métodos
-    public:
-    void login();
-    void signUp();
-    void forgot();
+    //atributes
+    string user,password,email;
+    string searchUser,searchPassword,searchEmail;
 
+    //files
+    fstream file;
+
+    //Functions
+public:
+    void fLogin();
+    void fRegister();
+    void fForgot();
 }objLogin;
 
+int main() {
 
-int main(){
-    //variavel de leitura
+    cout << "\n\t MENU" << endl;
+    cout << "\n\t 1 - LOGIN"<< endl;
+    cout << "\n\t 2 - REGISTER"<< endl;
+    cout << "\n\t 3 - FORGOT"<< endl;
+    cout << "\n\t 4 - EXIT"<< endl;
+
     char choice;
-
-    //Cabeçalho
-    cout << "\n\tMenu";
-    cout << "\n1 - Login";
-    cout << "\n2 - SignUp";
-    cout << "\n3 - Forgot Password";
-    cout << "\n4 - Exit";
-    cout << "\n Enter your choice";
-
-    //Leitura teclado
     cin >> choice;
 
     switch(choice){
-        case '1':
-            cin.ignore(); //é usado o cin.ignore para ignorar o \n deixado pelo "enter" ao selecionar a opção desejada
-            objLogin.login();
-        break;
 
+        case '1':
+            cin.ignore();
+            objLogin.fLogin();
+            break;
         case '2':
             cin.ignore();
-            objLogin.signUp();
-        break;
-
+            objLogin.fRegister();
+            break;
         case '3':
             cin.ignore();
-            objLogin.forgot();
-        break;
-
+            objLogin.fForgot();
+            break;
         case '4':
             return 0;
-        break;
+            break;
 
         default:
-        cout << "\n invalid choice";
+            cin.ignore();
+            cout << "Invalid choice";
     }
 }
 
-void Login :: signUp(){
-    //Leitura
-    cout << "enter your user name :: ";
-    getline(cin,userName);
-    cout << "enter yout email :: ";
-    getline(cin,email);
-    cout << "enter yout password :: ";
-    getline(cin,password);
+void Login::fLogin() {
 
-    //Manipulação de arquivo
-    //file é o nome da instancia do objeto da classe fstream (ele foi instanciado na classe login)
-    //metodo open abre um arquivo,caso o mesmo não exista ele será criado
-    // ios :: out --> Modo de saída, indica que o arquivo sera aberto para escrita
-    // ios :: app --> Modo de adição, indica que os dados serão escritos no final do arquivo,sem sobrescrever(override) o conteudo pré existente n oarquivo
-    // diferença entre \n e endl == \n insere uma nova linha e não garante que os dados do buffer de saída seja descarregado imediatamente, diferente do endl que força o descarregamento imediato dos dados,isso garante que os dados sejam mais consistente,principalmente em arquivos.
-    file.open("login.txt",ios :: out | ios :: app);
-    file<<userName<<"*"<<email<<"*"<<password<<endl;
-    file.close();
+    cout << "\n\t LOGIN" <<endl;
+    cout << "\n enter your user name"<<endl;
+    cin >> searchUser;
+    cin.ignore();
+    cout << "\n enter your password"<<endl;
+    cin >> searchPassword;
+    cin.ignore();
 
-}
-
-void Login :: login(){
-    /*
-    Diferença entre o cin e o getline:
-    cin é usado para ler entrada de dados ate encontrar
-    um espaço em branco (espaço,tabulação ou \n)
-    em casos de utilizar o cin é importante utilizar o cin.ignore para limpar os dados do buffer de entrada
-    */
-
-
-    cout << " \nenter your user name"<< endl;
-    getline(cin,searchName);
-    cout << "\nenter your password"<<endl;
-    getline(cin,searchPassword);
-
-    file.open("login.txt", ios :: in); //abre o arquivo login no modo de leitura
-    getline(file,userName,'*');
+    file.open("login.txt" , ios :: in );
+    getline(file,user,'*');
     getline(file,email,'*');
     getline(file,password,'\n');
-    while(!file.eof()){//file.eof() le o arquivo e retorna verdadeiro no final do arquivo,se usarmos o negador,retorna verdadeiro caso não seja o eof
-        if(userName == searchName){
+
+    while(!file.eof()){
+        if(user == searchUser){
             if(password == searchPassword){
-                cout << "\n login succesfull !!";
-                cout << "\n Username :: "<<userName;
-                cout <<"\n Email :: "<<email;
+                cout << "congratulations" << endl;
+            }
+            else{
+                cout << "INVALID FORGOT YOUR ACCOUNT" << endl;
             }
         }
-
-        getline(file,userName,'*');
+        getline(file,user,'*');
         getline(file,email,'*');
         getline(file,password,'\n');
-
     }
     file.close();
 }
 
-void Login :: forgot(){
+void Login::fForgot() {
+    cout << "\n\tFORGOT PASSWORD"<< endl;
+    cout << "\nenter your user"<<endl;
+    getline(cin,searchUser);
+    cout << "\nenter your email"<<endl;
+    getline(cin,searchEmail);
+
+    file.open("login.txt" , ios :: in);
+    getline(file,searchUser,'*');
+    getline(file,searchEmail,'*');
+    getline(file,password,'\n');
+
+    while(!file.eof()){
+        if(user == searchUser){
+            if(email == searchEmail){
+                cout<<"congratulations";
+            }
+        }
+        getline(file,searchUser,'*');
+        getline(file,searchEmail,'*');
+        getline(file,password,'\n');
+    }
+    file.close();
+
+
 }
 
+void Login::fRegister() {
+    cout<<"\n\tREGISTER"<<endl;
+    cout<<"\nenter your user"<<endl;
+    getline(cin,user);
+    cout<<"\nenter your email"<< endl;
+    getline(cin,email);
+    cout<<"\nenter your password"<<endl;
+    getline(cin,password);
 
+    bool flag = true;
 
+    file.open("login.txt" , ios :: in);
+    getline(file,searchUser,'*');
+    getline(file,searchEmail,'*');
+    getline(file,password,'\n');
+    while(!file.eof()){
+        if(user == searchUser){
+            cout << "user invalid" << endl;
+            flag = false;
+        }
+        if(email == searchEmail){
+            cout << "email invalid" << endl;
+            flag = false;
+        }
+        getline(file,searchUser,'*');
+        getline(file,searchEmail,'*');
+        getline(file,password,'\n');
+    }
+    file.close();
+
+    if(flag){
+        file.open("login.txt", ios :: out | ios :: app);
+        file<<user<<"*"<<email<<"*"<<password<<endl;
+        file.close();
+    }
+}
